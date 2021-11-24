@@ -4,9 +4,18 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from main.views import (
+    BlogListView,
+    BlogDetailView,
+    blog_category,
+    ContactFormView,
+    ProjectListView,
+    ProjectDetailView
+)
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", BlogListView.as_view(), name="home"),
+    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
@@ -16,6 +25,11 @@ urlpatterns = [
     path("users/", include("blog_tutorial.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("blog/<slug:slug>/", BlogDetailView.as_view(), name="blog-detail"),
+    path("blog/category/<slug:category>/", blog_category, name='categories'),
+    path("portfolio/", ProjectListView.as_view(), name="portfolio"),
+    path("portfolio/<slug:slug>", ProjectDetailView.as_view(), name="project-details"),
+    path("contact/", ContactFormView.as_view(), name="contact"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
